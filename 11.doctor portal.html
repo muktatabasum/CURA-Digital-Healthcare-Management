@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURA - Doctor Portal </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'medical-blue': '#1e40af',
+                        'medical-green': '#059669',
+                        'medical-red': '#dc2626',
+                        'medical-orange': '#ea580c'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .demo-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 1000;
+            font-size: 12px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .gradient-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .patient-card {
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .urgent-card {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .stable-card {
+            border-left: 4px solid #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+   
+
+    <!-- Header -->
+    <header class="gradient-header text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🏥</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">CURA</h1>
+                        <p class="text-sm opacity-90">Doctor Portal Dashboard</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="text-right">
+                        <p class="font-semibold"><a href="17. doctor log out.html">Dr. Mukta Tabassum</a></p>
+                        <p class="text-sm opacity-90"> Medicine Specialist</p>
+                    </div>
+                    <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <span class="text-lg"></a>👩‍⚕️</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-6">
+            <div class="flex space-x-8">
+                <button class="py-4 px-2 border-b-2 border-medical-blue text-medical-blue font-medium" onclick="showSection('dashboard')">
+                    Dashboard
+                </button>
+                <button class="py-4 px-2 text-gray-600 hover:text-medical-blue" onclick="showSection('patients')">
+                    My Patients
+                </button>
+                <button class="py-4 px-2 text-gray-600 hover:text-medical-blue" onclick="showSection('appointments')">
+                    Appointments
+                </button>
+                <button class="py-4 px-2 text-gray-600 hover:text-medical-blue" onclick="showSection('prescriptions')">
+                    Prescriptions
+                </button>
+                <button class="py-4 px-2 text-gray-600 hover:text-medical-blue" onclick="showSection('messages')">
+                    Messages
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-8">
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section">
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <a href="12.today's patient.html"><p class="text-sm font-medium text-gray-600">Today's Patients</p></a>
+                            <p class="text-3xl font-bold text-medical-blue">11</p>
+                            <p class="text-xs text-green-600">↑ 2 from yesterday</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">👥</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <a href="13.pending-reviews.html"><p class="text-sm font-medium text-gray-600">Pending Reviews</p></a>
+                            <p class="text-3xl font-bold text-medical-orange">6</p>
+                            <p class="text-xs text-orange-600">Lab results & reports</p>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">📋</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <a href="14.urgent-cases.html"><p class="text-sm font-medium text-gray-600">Urgent Cases</p></a>
+                            <p class="text-3xl font-bold text-medical-red">2</p>
+                            <p class="text-xs text-red-600">Requires immediate attention</p>
+                        </div>
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">🚨</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                           <a href="15.prescriptions.html"><p class="text-sm font-medium text-gray-600">Prescriptions</p></a>
+                            <p class="text-3xl font-bold text-medical-green">15</p>
+                            <p class="text-xs text-green-600">Issued this week</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">💊</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity & Urgent Cases -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Recent Patients -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="mr-2">👥</span>
+                        Recent Patients
+                   
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg patient-card">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <span class="text-lg">👨</span>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h3 class="font-semibold">Johan</h3>
+                                <p class="text-sm text-gray-600">Age 45 • Hypertension Follow-up</p>
+                                <p class="text-xs text-gray-500">Last visit: 2 days ago</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="status-dot bg-green-500"></span>
+                                <p class="text-xs text-green-600 mt-1">Stable</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg urgent-card">
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                <span class="text-lg">👩</span>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h3 class="font-semibold">Maria</h3>
+                                <p class="text-sm text-gray-600">Age 62 • Chest Pain</p>
+                                <p class="text-xs text-gray-500">Admitted: Today 9:30 AM</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="status-dot bg-red-500"></span>
+                                <p class="text-xs text-red-600 mt-1">Urgent</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg stable-card">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <span class="text-lg">👴</span>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h3 class="font-semibold">Rafiq</h3>
+                                <p class="text-sm text-gray-600">Age 68 • Diabetes Management</p>
+                                <p class="text-xs text-gray-500">Next appointment: Tomorrow</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="status-dot bg-green-500"></span>
+                                <p class="text-xs text-green-600 mt-1">Stable</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-4 bg-medical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors" onclick="demoAlert('View All Patients')">
+                        View All Patients
+                    </button>
+                </div>
+
+                <!-- Today's Schedule -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="mr-2">📅</span>
+                        Today's Schedule
+                        
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+                            <div class="w-16 text-center">
+                                <p class="text-sm font-semibold text-blue-600">9:00</p>
+                                <p class="text-xs text-blue-500">AM</p>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-medium">Annual Checkup</h3>
+                                <p class="text-sm text-gray-600">Mehedi (35)</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center p-3 border-l-4 border-red-500 bg-red-50 rounded-r-lg">
+                            <div class="w-16 text-center">
+                                <p class="text-sm font-semibold text-red-600">10:30</p>
+                                <p class="text-xs text-red-500">AM</p>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-medium">Emergency Consultation</h3>
+                                <p class="text-sm text-gray-600">Ayesha (28)</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center p-3 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+                            <div class="w-16 text-center">
+                                <p class="text-sm font-semibold text-green-600">2:00</p>
+                                <p class="text-xs text-green-500">PM</p>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-medium">Follow-up Visit</h3>
+                                <p class="text-sm text-gray-600">Amina (52)</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center p-3 border-l-4 border-purple-500 bg-purple-50 rounded-r-lg">
+                            <div class="w-16 text-center">
+                                <p class="text-sm font-semibold text-purple-600">4:00</p>
+                                <p class="text-xs text-purple-500">PM</p>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-medium">Telemedicine</h3>
+                                <p class="text-sm text-gray-600">Shihab (41)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-4 bg-medical-green text-white py-2 rounded-lg hover:bg-green-700 transition-colors" onclick="demoAlert('View Full Schedule')">
+                        View Full Schedule
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Section -->
+        <div id="patients" class="section hidden">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold flex items-center">
+                        <span class="mr-2">👥</span>
+                        Patient Management
+                    </h2>
+                    <button class="bg-medical-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors" onclick="demoAlert('Add New Patient')">
+                        + Add Patient
+                    </button>
+                </div>
+
+                <!-- Search and Filter -->
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <div class="flex-1">
+                        <input type="text" placeholder="Search patients..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option>All Patients</option>
+                        <option>Active Cases</option>
+                        <option>Urgent</option>
+                        <option>Stable</option>
+                    </select>
+                </div>
+
+                <!-- Patient List -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patient</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Age</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Condition</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Visit</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                            <span>👨</span>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium">Nadia</div>
+                                            <div class="text-sm text-gray-500">ID: P001</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm">45</td>
+                                <td class="px-6 py-4 text-sm">Hypertension</td>
+                                <td class="px-6 py-4 text-sm">July 12, 2025</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Stable</span>
+                                </td>
+                               
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                                            <span>👩</span>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium">Sadik</div>
+                                            <div class="text-sm text-gray-500">ID: P002</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm">26</td>
+                                <td class="px-6 py-4 text-sm">Chest Pain</td>
+                                <td class="px-6 py-4 text-sm">Today</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Urgent</span>
+                                </td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prescriptions Section -->
+        <div id="prescriptions" class="section hidden">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold flex items-center">
+                        <span class="mr-2">💊</span>
+                        Prescription Management
+                    </h2>
+                    <button class="bg-medical-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                     <a href="16.New-prescription.html" class="button">  + New Prescription</a>
+                    </button>
+                </div>
+
+                <!-- Prescription Form -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold">Create Prescription</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Patient</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option>Select Patient</option>
+                                <option>Tabassum (P001)</option>
+                                <option>Munmun (P002)</option>
+                                <option>Sadik (P003)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Medication</label>
+                            <input type="text" placeholder="Search medication..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Dosage</label>
+                                <input type="text" placeholder="e.g., 10mg" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Frequency</label>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option>Once daily</option>
+                                    <option>Twice daily</option>
+                                    <option>Three times daily</option>
+                                    <option>As needed</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                            <input type="text" placeholder="e.g., 30 days" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Instructions</label>
+                            <textarea placeholder="Special instructions for patient..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 h-24"></textarea>
+                        </div>
+
+                        <button class="w-full bg-medical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors" onclick="demoAlert('Prescription Created')">
+                            Create Prescription
+                        </button>
+                    </div>
+
+                    <!-- Recent Prescriptions -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Recent Prescriptions</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-medium">Biotin 1000mcg</h4>
+                                    <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded">Active</span>
+                                </div>
+                                <p class="text-sm text-gray-600">Patient: Tabassum</p>
+                                <p class="text-sm text-gray-600">Once daily for 30 days</p>
+                                <p class="text-xs text-gray-500 mt-2">Prescribed: Aug 5, 2025</p>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-medium">E-Cap 400mg</h4>
+                                    <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">Pending</span>
+                                </div>
+                                <p class="text-sm text-gray-600">Patient: Munmun</p>
+                                <p class="text-sm text-gray-600">Twice daily after meals</p>
+                                <p class="text-xs text-gray-500 mt-2">Prescribed: July 11, 2025</p>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-medium">Oral rehydration solution(ORS)</h4>
+                                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Completed</span>
+                                </div>
+                                <p class="text-sm text-gray-600">Patient: Sadik</p>
+                                <p class="text-sm text-gray-600">Once daily</p>
+                                <p class="text-xs text-gray-500 mt-2">Prescribed: July 27, 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Section -->
+        <div id="messages" class="section hidden">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                    <span class="mr-2">💬</span>
+                    Patient Messages
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Message List -->
+                    <div class="lg:col-span-1">
+                        <h3 class="font-semibold mb-4">Inbox (5)</h3>
+                        <div class="space-y-2">
+                            <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg cursor-pointer" onclick="selectMessage(1)">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-medium text-sm">Tabassum</h4>
+                                    <span class="text-xs text-gray-500">2h ago</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-1">Question about medication side effects...</p>
+                            </div>
+
+                            <div class="p-3 bg-red-50 border border-red-200 rounded-lg cursor-pointer" onclick="selectMessage(2)">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-medium text-sm">Sadik</h4>
+                                    <span class="text-xs text-gray-500">4h ago</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-1">Urgent: Chest pain symptoms...</p>
+                            </div>
+
+                            <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg cursor-pointer" onclick="selectMessage(3)">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-medium text-sm">Munmun</h4>
+                                    <span class="text-xs text-gray-500">1d ago</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-1">Lab results inquiry...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message Content -->
+                    <div class="lg:col-span-2">
+                        <div id="messageContent" class="border border-gray-200 rounded-lg p-6 h-96 overflow-y-auto">
+                            <div class="text-center text-gray-500">
+                                Select a message to view content
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <textarea placeholder="Type your response..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 h-24"></textarea>
+                            <div class="flex justify-between items-center mt-2">
+                                <div class="flex space-x-2">
+                                    <button class="text-sm text-gray-600 hover:text-gray-800">📎 Attach</button>
+                                    <button class="text-sm text-gray-600 hover:text-gray-800">📋 Template</button>
+                                </div>
+                                <button class="bg-medical-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors" onclick="demoAlert('Message Sent')">
+                                    Send Reply
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Section -->
+        <div id="appointments" class="section hidden">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold flex items-center">
+                        <span class="mr-2">📅</span>
+                        Appointment Management
+                        
+                    </h2>
+                    <button class="bg-medical-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors" onclick="demoAlert('Schedule Appointment')">
+                        + Schedule Appointment
+                    </button>
+                </div>
+
+                <!-- Calendar View -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div class="lg:col-span-3">
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold">August 2025</h3>
+                                <div class="flex space-x-2">
+                                    <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">←</button>
+                                    <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">→</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Simple Calendar Grid -->
+                            <div class="grid grid-cols-7 gap-2 text-center">
+                                <div class="font-semibold text-gray-600 py-2">Sun</div>
+                                <div class="font-semibold text-gray-600 py-2">Mon</div>
+                                <div class="font-semibold text-gray-600 py-2">Tue</div>
+                                <div class="font-semibold text-gray-600 py-2">Wed</div>
+                                <div class="font-semibold text-gray-600 py-2">Thu</div>
+                                <div class="font-semibold text-gray-600 py-2">Fri</div>
+                                <div class="font-semibold text-gray-600 py-2">Sat</div>
+                                
+                                <!-- Calendar days -->
+                                <div class="py-2 text-gray-400">26</div>
+                                <div class="py-2 text-gray-400">27</div>
+                                <div class="py-2 text-gray-400">28</div>
+                                <div class="py-2 text-gray-400">29</div>
+                                <div class="py-2 text-gray-400">30</div>
+                                <div class="py-2">1</div>
+                                <div class="py-2">2</div>
+                                
+                                <div class="py-2">3</div>
+                                <div class="py-2">4</div>
+                                <div class="py-2">5</div>
+                                <div class="py-2">6</div>
+                                <div class="py-2">7</div>
+                                <div class="py-2">8</div>
+                                <div class="py-2">9</div>
+                                
+                                <div class="py-2">10</div>
+                                <div class="py-2">11</div>
+                                <div class="py-2">12</div>
+                                <div class="py-2">13</div>
+                                <div class="py-2 bg-blue-100 rounded font-semibold">14</div>
+                                <div class="py-2 bg-red-100 rounded">15</div>
+                                <div class="py-2">16</div>
+                                <div class="py-2">17</div>
+                                <div class="py-2">18</div>
+                                <div class="py-2">19</div>
+                                <div class="py-2">20</div>
+                                <div class="py-2">21</div>
+                                <div class="py-2">22</div>
+                                <div class="py-2">23</div>
+                                <div class="py-2">24</div>
+                                <div class="py-2">25</div>
+                                <div class="py-2">26</div>
+                                <div class="py-2">27</div>
+                                <div class="py-2">28</div>
+                                <div class="py-2">29</div>
+                                <div class="py-2">30</div>
+                                <div class="py-2">31</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Appointment Details -->
+                    <div>
+                        <h3 class="font-semibold mb-4">Today's Appointments</h3>
+                        <div class="space-y-3">
+                            <div class="border border-blue-200 bg-blue-50 rounded-lg p-3">
+                                <div class="text-sm font-semibold text-blue-800">9:00 AM</div>
+                                <div class="text-sm">Akash</div>
+                                <div class="text-xs text-gray-600">Annual Checkup</div>
+                            </div>
+
+                            <div class="border border-red-200 bg-red-50 rounded-lg p-3">
+                                <div class="text-sm font-semibold text-red-800">10:30 AM</div>
+                                <div class="text-sm">Niloy</div>
+                                <div class="text-xs text-gray-600">Emergency</div>
+                            </div>
+
+                            <div class="border border-green-200 bg-green-50 rounded-lg p-3">
+                                <div class="text-sm font-semibold text-green-800">2:00 PM</div>
+                                <div class="text-sm">Lisa</div>
+                                <div class="text-xs text-gray-600">Follow-up</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Section navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.remove('hidden');
+            
+            // Update navigation
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('border-b-2', 'border-medical-blue', 'text-medical-blue');
+                btn.classList.add('text-gray-600');
+            });
+            
+            event.target.classList.remove('text-gray-600');
+            event.target.classList.add('border-b-2', 'border-medical-blue', 'text-medical-blue');
+        }
+
+
+        // Message selection
+        function selectMessage(messageId) {
+            const messages = {
+                1: {
+                    sender: "Tabassum",
+                    time: "2 hours ago",
+                    content: "Hi Dr. Johnson, I've been taking the Lisinopril you prescribed and I'm experiencing some dizziness. Is this normal? Should I be concerned?"
+                },
+                2: {
+                    sender: "Sadik",
+                    time: "4 hours ago",
+                    content: "Doctor, I'm having chest pain again. It's similar to what I experienced last week but more intense. Should I come in immediately?"
+                },
+                3: {
+                    sender: "Munmun",
+                    time: "1 day ago",
+                    content: "Hello, I received my lab results but I'm not sure how to interpret them. Could you please explain what the numbers mean?"
+                }
+            };
+
+            const message = messages[messageId];
+            if (message) {
+                document.getElementById('messageContent').innerHTML = `
+                    <div class="border-b border-gray-200 pb-4 mb-4">
+                        <h3 class="font-semibold">${message.sender}</h3>
+                        <p class="text-sm text-gray-500">${message.time}</p>
+                    </div>
+                    <div class="prose">
+                        <p>${message.content}</p>
+                    </div>
+                    
+                `;
+            }
+        }
+
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a5ed9942e8814e',t:'MTc1NDM5MzA2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

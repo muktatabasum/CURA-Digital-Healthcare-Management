@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURA Admin Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div>
+                      <span class="text-2xl">🏥</span>  
+                    </div>
+                    
+                    <h1 class="text-2xl font-bold text-gray-900">CURA </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600">Welcome, <a href="2.admin log out.html">Admin</a></span>
+                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                        <span class="text-gray-600 text-sm">👤</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Navigation Tabs -->
+        <div class="mb-8">
+            <nav class="flex space-x-1 bg-white rounded-lg p-1 shadow-md">
+                <button onclick="showTab('dashboard')" id="dashboard-tab" class="tab-btn flex-1 py-3 px-4 text-center rounded-md font-medium transition-all bg-blue-600 text-white">
+                    📊 Dashboard
+                </button>
+                <button onclick="showTab('doctors')" id="doctors-tab" class="tab-btn flex-1 py-3 px-4 text-center rounded-md font-medium transition-all text-gray-600 hover:text-gray-900">
+                    👨‍⚕️ Doctors
+                </button>
+                <button onclick="showTab('patients')" id="patients-tab" class="tab-btn flex-1 py-3 px-4 text-center rounded-md font-medium transition-all text-gray-600 hover:text-gray-900">
+                    👥 Patients
+                </button>
+                <button onclick="showTab('appointments')" id="appointments-tab" class="tab-btn flex-1 py-3 px-4 text-center rounded-md font-medium transition-all text-gray-600 hover:text-gray-900">
+                    📅 Appointments
+                </button>
+            </nav>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                      <p class="text-gray-600 text-sm">Total Doctors</p>
+                            <p class="text-3xl font-bold text-blue-600">24</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">👨‍⚕️</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Total Patients</p>
+                            <p class="text-3xl font-bold text-green-600">1,247</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">👥</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Today's Appointments</p>
+                            <p class="text-3xl font-bold text-purple-600">18</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">📅</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Revenue</p>
+                            <p class="text-3xl font-bold text-orange-600">$12,450</p>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">💰</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-semibold mb-4">Recent Appointments</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium">Inzaman</p>
+                                <p class="text-sm text-gray-600">Dr. Amirul Islam - 10:00 AM</p>
+                            </div>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Confirmed</span>
+                        </div>
+                         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium">Ayesha Akter</p>
+                                <p class="text-sm text-gray-600">Dr. Mukta Tabassum - 11:00 AM</p>
+                            </div>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Confirmed</span>
+                        </div>
+                         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium">Md. Mohibur Rahman</p>
+                                <p class="text-sm text-gray-600">Dr. Sadikul Islam - 11:30 AM</p>
+                            </div>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Confirmed</span>
+                        </div>
+                         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium">Ashikur Rahman</p>
+                                <p class="text-sm text-gray-600">Dr. Munmun Akter Ratna - 12:00 PM</p>
+                            </div>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Confirmed</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium">Famid Hossain</p>
+                                <p class="text-sm text-gray-600">Dr. Syed Maimun Tamal - 2:30 PM</p>
+                            </div>
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Pending</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="showTab('doctors')" class="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg text-center transition-colors">
+                            <div class="text-2xl mb-2">➕</div>
+                            <div class="text-sm font-medium">Add Doctor</div>
+                        </button>
+                        <button onclick="showTab('patients')" class="p-4 bg-green-50 hover:bg-green-100 rounded-lg text-center transition-colors">
+                            <div class="text-2xl mb-2">👤</div>
+                            <div class="text-sm font-medium">Add Patient</div>
+                        </button>
+                        <button onclick="showTab('appointments')" class="p-4 bg-purple-50 hover:bg-purple-100 rounded-lg text-center transition-colors">
+                            <div class="text-2xl mb-2">📅</div>
+                            <div class="text-sm font-medium">Schedule</div>
+                        </button>
+                        <button class="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg text-center transition-colors">
+                            <div class="text-2xl mb-2">📊</div>
+                            <div class="text-sm font-medium">Reports</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctors Tab -->
+        <div id="doctors" class="tab-content hidden">
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold">Doctor Management</h2>
+                    <button onclick="showAddDoctorForm()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                        ➕ Add New Doctor
+                    </button>
+                </div>
+
+                <!-- Add Doctor Form -->
+                <div id="add-doctor-form" class="hidden mb-6 p-4 bg-gray-50 rounded-lg">
+                    <h3 class="text-lg font-medium mb-4">Add New Doctor</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="doctor-name" placeholder="Full Name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <input type="text" id="doctor-specialty" placeholder="Specialty" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <input type="email" id="doctor-email" placeholder="Email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <input type="tel" id="doctor-phone" placeholder="Phone" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div class="flex space-x-3 mt-4">
+                        <button onclick="addDoctor()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                            Save Doctor
+                        </button>
+                        <button onclick="hideAddDoctorForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Doctors List -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Name</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Specialty</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Email</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Phone</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Status</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctors-list">
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Dr. Mariyam Moni</td>
+                                <td class="py-3 px-4">Cardiology</td>
+                                <td class="py-3 px-4">mariyammoni@hospital.com</td>
+                                <td class="py-3 px-4">(555) 123-4567</td>
+                                <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Active</span></td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Dr. Mukta Tabassum</td>
+                                <td class="py-3 px-4">Medicine-Specialist</td>
+                                <td class="py-3 px-4">muktatabassum@hospital.com</td>
+                                <td class="py-3 px-4">(555) 123-8910</td>
+                                <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Active</span></td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                             <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Dr. Munmun Akter Ratna</td>
+                                <td class="py-3 px-4">Pediatrician</td>
+                                <td class="py-3 px-4">munmunratna@hospital.com</td>
+                                <td class="py-3 px-4">(555) 123-1112</td>
+                                <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Active</span></td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Dr. Sadikul Islam</td>
+                                <td class="py-3 px-4">Neurology</td>
+                                <td class="py-3 px-4">sadikul@hospital.com</td>
+                                <td class="py-3 px-4">(555) 234-4321</td>
+                                <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Active</span></td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                             <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Dr. Syed Maimun Tamal</td>
+                                <td class="py-3 px-4">Dermatosurgery</td>
+                                <td class="py-3 px-4">maimuntamal@hospital.com</td>
+                                <td class="py-3 px-4">(555) 234-5791</td>
+                                <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Active</span></td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                             <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Dr. Amirul Islam</td>
+                                <td class="py-3 px-4">Oral and Dental Surgeon</td>
+                                <td class="py-3 px-4">amirul@hospital.com</td>
+                                <td class="py-3 px-4">(555) 234-6754</td>
+                                <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Active</span></td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Dr. Maruf Ahmed</td>
+                                <td class="py-3 px-4">Orthopedics</td>
+                                <td class="py-3 px-4">marufahmed@hospital.com</td>
+                                <td class="py-3 px-4">(555) 234-6085</td>
+                                <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Active</span></td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Tab -->
+        <div id="patients" class="tab-content hidden">
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold">Patient Management</h2>
+                    <button onclick="showAddPatientForm()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                        ➕ Add New Patient
+                    </button>
+                </div>
+
+                <!-- Add Patient Form -->
+                <div id="add-patient-form" class="hidden mb-6 p-4 bg-gray-50 rounded-lg">
+                    <h3 class="text-lg font-medium mb-4">Add New Patient</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="patient-name" placeholder="Full Name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <input type="date" id="patient-dob" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <input type="email" id="patient-email" placeholder="Email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <input type="tel" id="patient-phone" placeholder="Phone" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <textarea id="patient-address" placeholder="Address" rows="2" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent md:col-span-2"></textarea>
+                    </div>
+                    <div class="flex space-x-3 mt-4">
+                        <button onclick="addPatient()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                            Save Patient
+                        </button>
+                        <button onclick="hideAddPatientForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Patients List -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Name</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Age</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Email</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Phone</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Last Visit</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patients-list">
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Atiwer</td>
+                                <td class="py-3 px-4">25</td>
+                                <td class="py-3 px-4">atiwer.hossain@gemail.com</td>
+                                <td class="py-3 px-4">(555) 345-6789</td>
+                                <td class="py-3 px-4">2025-08-15</td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-purple-600 hover:text-purple-800 mr-2">Schedule</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Tuhin Ekbal Yeamin</td>
+                                <td class="py-3 px-4">27</td>
+                                <td class="py-3 px-4">tuhinekbal@gemail.com</td>
+                                <td class="py-3 px-4">(555) 456-7890</td>
+                                <td class="py-3 px-4">2025-08-14</td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-purple-600 hover:text-purple-800 mr-2">Schedule</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Sajib Datta</td>
+                                <td class="py-3 px-4">32</td>
+                                <td class="py-3 px-4">sajibdatta@gemail.com</td>
+                                <td class="py-3 px-4">(555) 456-9760</td>
+                                <td class="py-3 px-4">2025-08-13</td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-purple-600 hover:text-purple-800 mr-2">Schedule</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Anando Kumar</td>
+                                <td class="py-3 px-4">28</td>
+                                <td class="py-3 px-4">anandokumar@gemail.com</td>
+                                <td class="py-3 px-4">(555) 456-7420</td>
+                                <td class="py-3 px-4">2025-08-12</td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-purple-600 hover:text-purple-800 mr-2">Schedule</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Alhaz Ali</td>
+                                <td class="py-3 px-4">30</td>
+                                <td class="py-3 px-4">alhazali@gemail.com</td>
+                                <td class="py-3 px-4">(555) 456-7855</td>
+                                <td class="py-3 px-4">2025-08-11</td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-purple-600 hover:text-purple-800 mr-2">Schedule</button>
+                                    <button class="text-red-600 hover:text-red-800">Remove</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Tab -->
+        <div id="appointments" class="tab-content hidden">
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold">Appointment Management</h2>
+                    <button onclick="showScheduleForm()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                       <a href="patient-schedule.html"> 📅 Schedule Appointment</a>
+                    </button>
+                </div>
+
+               
+
+                <!-- Appointments List -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Patient</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Doctor</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Date</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Time</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Status</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-list">
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Md. Sahboddin</td>
+                                <td class="py-3 px-4">Dr. Syed Maimun Tamal</td>
+                                <td class="py-3 px-4">2025-08-20</td>
+                                <td class="py-3 px-4">10:00 AM</td>
+                                <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Confirmed</span></td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-red-600 hover:text-red-800">Cancel</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Md. Mohibur Rahman</td>
+                                <td class="py-3 px-4">Dr. Munmun Akter Ratna</td>
+                                <td class="py-3 px-4">2025-08-20</td>
+                                <td class="py-3 px-4">2:30 PM</td>
+                                <td class="py-3 px-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Pending</span></td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                                    <button class="text-red-600 hover:text-red-800">Cancel</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+            
+            // Remove active class from all tabs
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('text-gray-600');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.remove('hidden');
+            
+            // Add active class to selected tab
+            const activeTab = document.getElementById(tabName + '-tab');
+            activeTab.classList.add('bg-blue-600', 'text-white');
+            activeTab.classList.remove('text-gray-600');
+        }
+
+        // Doctor Management
+        function showAddDoctorForm() {
+            document.getElementById('add-doctor-form').classList.remove('hidden');
+        }
+
+        function hideAddDoctorForm() {
+            document.getElementById('add-doctor-form').classList.add('hidden');
+            clearDoctorForm();
+        }
+
+        function clearDoctorForm() {
+            document.getElementById('doctor-name').value = '';
+            document.getElementById('doctor-specialty').value = '';
+            document.getElementById('doctor-email').value = '';
+            document.getElementById('doctor-phone').value = '';
+        }
+
+        function addDoctor() {
+            const name = document.getElementById('doctor-name').value;
+            const specialty = document.getElementById('doctor-specialty').value;
+            const email = document.getElementById('doctor-email').value;
+            const phone = document.getElementById('doctor-phone').value;
+
+            if (name && specialty && email && phone) {
+                const doctorsList = document.getElementById('doctors-list');
+                const newRow = document.createElement('tr');
+                newRow.className = 'border-b border-gray-100 hover:bg-gray-50';
+                newRow.innerHTML = `
+                    <td class="py-3 px-4">${name}</td>
+                    <td class="py-3 px-4">${specialty}</td>
+                    <td class="py-3 px-4">${email}</td>
+                    <td class="py-3 px-4">${phone}</td>
+                    <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Active</span></td>
+                    <td class="py-3 px-4">
+                        <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                        <button class="text-red-600 hover:text-red-800">Remove</button>
+                    </td>
+                `;
+                doctorsList.appendChild(newRow);
+                hideAddDoctorForm();
+                alert('Doctor added successfully!');
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        // Patient Management
+        function showAddPatientForm() {
+            document.getElementById('add-patient-form').classList.remove('hidden');
+        }
+
+        function hideAddPatientForm() {
+            document.getElementById('add-patient-form').classList.add('hidden');
+            clearPatientForm();
+        }
+
+        function clearPatientForm() {
+            document.getElementById('patient-name').value = '';
+            document.getElementById('patient-dob').value = '';
+            document.getElementById('patient-email').value = '';
+            document.getElementById('patient-phone').value = '';
+            document.getElementById('patient-address').value = '';
+        }
+
+        function addPatient() {
+            const name = document.getElementById('patient-name').value;
+            const dob = document.getElementById('patient-dob').value;
+            const email = document.getElementById('patient-email').value;
+            const phone = document.getElementById('patient-phone').value;
+
+            if (name && dob && email && phone) {
+                const age = new Date().getFullYear() - new Date(dob).getFullYear();
+                const patientsList = document.getElementById('patients-list');
+                const newRow = document.createElement('tr');
+                newRow.className = 'border-b border-gray-100 hover:bg-gray-50';
+                newRow.innerHTML = `
+                    <td class="py-3 px-4">${name}</td>
+                    <td class="py-3 px-4">${age}</td>
+                    <td class="py-3 px-4">${email}</td>
+                    <td class="py-3 px-4">${phone}</td>
+                    <td class="py-3 px-4">New Patient</td>
+                    <td class="py-3 px-4">
+                        <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                        <button class="text-purple-600 hover:text-purple-800 mr-2">Schedule</button>
+                        <button class="text-red-600 hover:text-red-800">Remove</button>
+                    </td>
+                `;
+                patientsList.appendChild(newRow);
+                hideAddPatientForm();
+                alert('Patient added successfully!');
+            } else {
+                alert('Please fill in all required fields');
+            }
+        }
+
+        // Appointment Management
+        function showScheduleForm() {
+            document.getElementById('schedule-form').classList.remove('hidden');
+        }
+
+        function hideScheduleForm() {
+            document.getElementById('schedule-form').classList.add('hidden');
+            clearScheduleForm();
+        }
+
+        function clearScheduleForm() {
+            document.getElementById('appointment-patient').value = '';
+            document.getElementById('appointment-doctor').value = '';
+            document.getElementById('appointment-date').value = '';
+            document.getElementById('appointment-time').value = '';
+            document.getElementById('appointment-notes').value = '';
+        }
+
+        function scheduleAppointment() {
+            const patient = document.getElementById('appointment-patient').value;
+            const doctor = document.getElementById('appointment-doctor').value;
+            const date = document.getElementById('appointment-date').value;
+            const time = document.getElementById('appointment-time').value;
+
+            if (patient && doctor && date && time) {
+                const patientName = document.getElementById('appointment-patient').selectedOptions[0].text;
+                const doctorName = document.getElementById('appointment-doctor').selectedOptions[0].text;
+                const appointmentsList = document.getElementById('appointments-list');
+                const newRow = document.createElement('tr');
+                newRow.className = 'border-b border-gray-100 hover:bg-gray-50';
+                
+                // Convert 24-hour time to 12-hour format
+                const timeFormatted = new Date('1970-01-01T' + time + ':00').toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                });
+
+                newRow.innerHTML = `
+                    <td class="py-3 px-4">${patientName}</td>
+                    <td class="py-3 px-4">${doctorName}</td>
+                    <td class="py-3 px-4">${date}</td>
+                    <td class="py-3 px-4">${timeFormatted}</td>
+                    <td class="py-3 px-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Scheduled</span></td>
+                    <td class="py-3 px-4">
+                        <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                        <button class="text-red-600 hover:text-red-800">Cancel</button>
+                    </td>
+                `;
+                appointmentsList.appendChild(newRow);
+                hideScheduleForm();
+                alert('Appointment scheduled successfully!');
+            } else {
+                alert('Please fill in all required fields');
+            }
+        }
+
+        // Initialize dashboard on load
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('dashboard');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96ab706087e233d3',t:'MTc1NDQ1MDg1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURA - Personal Wellness Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'health-blue': '#0ea5e9',
+                        'health-green': '#10b981',
+                        'health-purple': '#8b5cf6',
+                        'health-orange': '#f59e0b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .health-metric {
+            background: linear-gradient(45deg, #f0f9ff, #e0f2fe);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🏥</span>
+                    </div>
+                    <h1 class="text-2xl font-bold">CURA</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm opacity-90">Welcome back, <a href="patient log out.html">Ayman</a></span>
+                    <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <span class="text-sm">👤</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-6 py-8">
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover health-metric">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Heart Rate</p>
+                        <p class="text-2xl font-bold text-health-blue" id="heartRate">72</p>
+                        <p class="text-xs text-green-600">Normal range</p>
+                    </div>
+                    <div class="w-12 h-12 bg-health-blue bg-opacity-10 rounded-full flex items-center justify-center">
+                        <span class="text-2xl pulse-animation">❤️</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover health-metric">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Blood Pressure</p>
+                        <p class="text-2xl font-bold text-health-green">120/80</p>
+                        <p class="text-xs text-green-600">Optimal</p>
+                    </div>
+                    <div class="w-12 h-12 bg-health-green bg-opacity-10 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🩺</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover health-metric">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Steps Today</p>
+                        <p class="text-2xl font-bold text-health-purple" id="steps">8,247</p>
+                        <p class="text-xs text-green-600">Goal: 10,000</p>
+                    </div>
+                    <div class="w-12 h-12 bg-health-purple bg-opacity-10 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">👟</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover health-metric">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Sleep Quality</p>
+                        <p class="text-2xl font-bold text-health-orange">7.5h</p>
+                        <p class="text-xs text-green-600">Good quality</p>
+                    </div>
+                    <div class="w-12 h-12 bg-health-orange bg-opacity-10 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">😴</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Health Progress -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="mr-2">📊</span>
+                        Health Progress
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium">Daily Water Intake</span>
+                                <span class="text-sm text-gray-600" id="waterProgress">6/8 glasses</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-health-blue h-2 rounded-full progress-bar" style="width: 75%" id="waterBar"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium">Exercise Goal</span>
+                                <span class="text-sm text-gray-600">45/60 minutes</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-health-green h-2 rounded-full progress-bar" style="width: 75%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium">Meditation</span>
+                                <span class="text-sm text-gray-600">15/20 minutes</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-health-purple h-2 rounded-full progress-bar" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Symptom Tracker -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="mr-2">📝</span>
+                        Symptom Tracker
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <h3 class="font-medium mb-2">How are you feeling today?</h3>
+                            <div class="flex space-x-2">
+                                <button class="mood-btn w-10 h-10 rounded-full bg-green-100 hover:bg-green-200 flex items-center justify-center" onclick="selectMood(this, 'great')">😊</button>
+                                <button class="mood-btn w-10 h-10 rounded-full bg-yellow-100 hover:bg-yellow-200 flex items-center justify-center" onclick="selectMood(this, 'good')">🙂</button>
+                                <button class="mood-btn w-10 h-10 rounded-full bg-orange-100 hover:bg-orange-200 flex items-center justify-center" onclick="selectMood(this, 'okay')">😐</button>
+                                <button class="mood-btn w-10 h-10 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center" onclick="selectMood(this, 'poor')">😞</button>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <h3 class="font-medium mb-2">Pain Level (0-10)</h3>
+                            <input type="range" min="0" max="10" value="2" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" id="painSlider" oninput="updatePainLevel(this.value)">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>No pain</span>
+                                <span id="painValue">2</span>
+                                <span>Severe</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="mt-4 bg-health-blue text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors" onclick="logSymptoms()">
+                        Log Today's Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Upcoming Appointments -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="mr-2">📅</span>
+                        Upcoming
+                    </h2>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center p-3 bg-blue-50 rounded-lg">
+                            <div class="w-10 h-10 bg-health-blue rounded-full flex items-center justify-center text-white font-semibold">
+                                15
+                            </div>
+                            <div class="ml-3">
+                                <p class="font-medium text-sm">Dr. Mukta Tabassum - Checkup</p>
+                                <p class="text-xs text-gray-600">Tomorrow, 5:00 PM</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center p-3 bg-green-50 rounded-lg">
+                            <div class="w-10 h-10 bg-health-green rounded-full flex items-center justify-center text-white font-semibold">
+                                18
+                            </div>
+                            <div class="ml-3">
+                                <p class="font-medium text-sm">Lab Results Review</p>
+                                <p class="text-xs text-gray-600">Friday, 10:00 AM</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-4 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+                        <a href="patient-schedule.html">Schedule New Appointment</a>
+                    </button>
+                </div>
+
+                <!-- Medications -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="mr-2">💊</span>
+                        Medications
+                    </h2>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-sm">Biotin</p>
+                                <p class="text-xs text-gray-600">1000 mcg daily</p>
+                            </div>
+                            <button class="text-green-600 hover:text-green-700" onclick="markTaken(this)">
+                                <span class="text-lg">✓</span>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-sm">Vitamin B complex</p>
+                                <p class="text-xs text-gray-600">1 Tablet after meals</p>
+                            </div>
+                            <button class="text-green-600 hover:text-green-700" onclick="markTaken(this)">
+                                <span class="text-lg">✓</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-4 bg-health-purple text-white py-2 rounded-lg hover:bg-purple-600 transition-colors">
+                        Add Medication
+                    </button>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="mr-2">⚡</span>
+                        Quick Actions
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors flex items-center" onclick="quickAction('emergency')">
+                            <span class="mr-3 text-red-500">🚨</span>
+                            Emergency Contacts
+                        </button>
+                        <button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors flex items-center" onclick="quickAction('export')">
+                            <span class="mr-3 text-blue-500">📊</span>
+                            Export Health Data
+                        </button>
+                        <button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors flex items-center" onclick="quickAction('reminder')">
+                            <span class="mr-3 text-green-500">⏰</span>
+                            Set Reminder
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Heart rate animation
+        function animateHeartRate() {
+            const heartRate = document.getElementById('heartRate');
+            const rates = [72, 73, 71, 74, 72, 70, 73];
+            let index = 0;
+            
+            setInterval(() => {
+                heartRate.textContent = rates[index];
+                index = (index + 1) % rates.length;
+            }, 2000);
+        }
+
+        // Steps counter animation
+        function animateSteps() {
+            const steps = document.getElementById('steps');
+            let currentSteps = 8247;
+            
+            setInterval(() => {
+                currentSteps += Math.floor(Math.random() * 5);
+                steps.textContent = currentSteps.toLocaleString();
+            }, 5000);
+        }
+
+        // Water intake tracker
+        function updateWaterIntake() {
+            const waterProgress = document.getElementById('waterProgress');
+            const waterBar = document.getElementById('waterBar');
+            let glasses = 6;
+            
+            window.addWater = function() {
+                if (glasses < 8) {
+                    glasses++;
+                    waterProgress.textContent = `${glasses}/8 glasses`;
+                    waterBar.style.width = `${(glasses/8) * 100}%`;
+                }
+            };
+        }
+
+        // Mood selection
+        function selectMood(button, mood) {
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-blue-500');
+            });
+            button.classList.add('ring-2', 'ring-blue-500');
+            
+            // Show feedback
+            showNotification(`Mood logged: ${mood}`, 'success');
+        }
+
+        // Pain level slider
+        function updatePainLevel(value) {
+            document.getElementById('painValue').textContent = value;
+        }
+
+        // Mark medication as taken
+        function markTaken(button) {
+            button.innerHTML = '<span class="text-lg text-green-600">✅</span>';
+            button.disabled = true;
+            showNotification('Medication marked as taken!', 'success');
+        }
+
+        // Log symptoms
+        function logSymptoms() {
+            showNotification('Symptoms logged successfully!', 'success');
+        }
+
+        // Quick actions
+        function quickAction(action) {
+            const actions = {
+                emergency: 'Emergency contacts displayed',
+                export: 'Health data export started',
+                reminder: 'Reminder set successfully'
+            };
+            showNotification(actions[action], 'info');
+        }
+
+        // Notification system
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+            } text-white`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            animateHeartRate();
+            animateSteps();
+            updateWaterIntake();
+        });
+
+        // Add water button functionality
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.progress-bar')) {
+                addWater();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a5d88d4274d058',t:'MTc1NDM5MjIwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

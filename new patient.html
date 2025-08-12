@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURA - Welcome New Patient</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cura-purple': '#8B5CF6',
+                        'cura-blue': '#3B82F6',
+                        'cura-green': '#10B981',
+                        'cura-pink': '#EC4899'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .big-button {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        .big-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+        .step-indicator {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .help-tooltip {
+            position: relative;
+        }
+        .help-tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white p-6 card-shadow sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                    <span class="text-cura-purple font-bold text-2xl">+</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold">CURA</h1>
+                    <p class="text-sm opacity-90">Your Health Companion</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:flex items-center space-x-4">
+                    <button class="bg-white bg-opacity-20 px-4 py-2 rounded-full text-sm hover:bg-opacity-30 transition-colors" onclick="openSearch()">
+                        🔍 Search
+                    </button>
+                    <button class="bg-white bg-opacity-20 px-4 py-2 rounded-full text-sm hover:bg-opacity-30 transition-colors" onclick="openNotifications()">
+                        🔔 Alerts
+                    </button>
+                    <button class="bg-white bg-opacity-20 px-4 py-2 rounded-full text-sm hover:bg-opacity-30 transition-colors" onclick="openHelp()">
+                        📞 Help
+                    </button>
+                </div>
+                <button class="md:hidden bg-white bg-opacity-20 p-2 rounded-full" onclick="toggleMobileMenu()">
+                    <span class="text-xl">☰</span>
+                </button>
+                <div class="text-right">
+                    <p class="text-sm opacity-90">Welcome!</p>
+                    <p class="font-semibold text-lg">New Patient</p>
+                </div>
+                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center cursor-pointer" onclick="openProfile()">
+                    <span class="text-2xl">👤</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenu" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="bg-white w-80 h-full shadow-xl p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Menu</h3>
+                <button onclick="toggleMobileMenu()" class="text-2xl">✕</button>
+            </div>
+            <div class="space-y-4">
+                <button class="w-full flex items-center space-x-3 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors" onclick="openSearch()">
+                    <span class="text-xl">🔍</span>
+                    <span class="font-medium">Search</span>
+                </button>
+                <button class="w-full flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors" onclick="openNotifications()">
+                    <span class="text-xl">🔔</span>
+                    <span class="font-medium">Notifications</span>
+                </button>
+                <button class="w-full flex items-center space-x-3 p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors" onclick="openHelp()">
+                    <span class="text-xl">📞</span>
+                    <span class="font-medium">Help & Support</span>
+                </button>
+                <button class="w-full flex items-center space-x-3 p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors" onclick="openProfile()">
+                    <span class="text-xl">👤</span>
+                    <span class="font-medium">My Profile</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-2xl mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Search CURA</h3>
+                <button onclick="closeSearch()" class="text-2xl">✕</button>
+            </div>
+            <input type="text" placeholder="Search for doctors, appointments, medications..." class="w-full p-4 border-2 border-gray-200 rounded-xl text-lg mb-4" id="searchInput">
+            <div class="space-y-2">
+                <div class="p-3 bg-blue-50 rounded-lg cursor-pointer hover:bg-blue-100">
+                    <p class="font-medium">👨‍⚕️ Find a Doctor</p>
+                    <p class="text-sm text-gray-600">Search specialists and general practitioners</p>
+                </div>
+                <div class="p-3 bg-green-50 rounded-lg cursor-pointer hover:bg-green-100">
+                    <p class="font-medium">📅 Book Appointment</p>
+                    <p class="text-sm text-gray-600">Schedule your next visit</p>
+                </div>
+                <div class="p-3 bg-purple-50 rounded-lg cursor-pointer hover:bg-purple-100">
+                    <p class="font-medium">💊 Medication Info</p>
+                    <p class="text-sm text-gray-600">Look up drug information and interactions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div id="notificationsModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-lg mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Notifications</h3>
+                <button onclick="closeNotifications()" class="text-2xl">✕</button>
+            </div>
+            <div class="space-y-3">
+                <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                    <p class="font-medium text-blue-800">Welcome to CURA! 🎉</p>
+                    <p class="text-sm text-blue-600">Complete your profile setup to get started</p>
+                    <p class="text-xs text-blue-500 mt-1">Just now</p>
+                </div>
+                <div class="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                    <p class="font-medium text-green-800">Health tip of the day 💡</p>
+                    <p class="text-sm text-green-600">Remember to drink 8 glasses of water today</p>
+                    <p class="text-xs text-green-500 mt-1">2 hours ago</p>
+                </div>
+                <div class="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                    <p class="font-medium text-yellow-800">Setup reminder 📋</p>
+                    <p class="text-sm text-yellow-600">Don't forget to add your emergency contacts</p>
+                    <p class="text-xs text-yellow-500 mt-1">1 day ago</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-2xl mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Help & Support</h3>
+                <button onclick="closeHelp()" class="text-2xl">✕</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 bg-blue-50 rounded-lg cursor-pointer hover:bg-blue-100">
+                    <div class="text-3xl mb-2">💬</div>
+                    <p class="font-medium text-blue-800">Live Chat</p>
+                    <p class="text-sm text-blue-600">Chat with our support team</p>
+                </div>
+                <div class="p-4 bg-green-50 rounded-lg cursor-pointer hover:bg-green-100">
+                    <div class="text-3xl mb-2">📞</div>
+                    <p class="font-medium text-green-800">Call Support</p>
+                    <p class="text-sm text-green-600">1-800-CURA-HELP</p>
+                </div>
+                <div class="p-4 bg-purple-50 rounded-lg cursor-pointer hover:bg-purple-100">
+                    <div class="text-3xl mb-2">📚</div>
+                    <p class="font-medium text-purple-800">Help Center</p>
+                    <p class="text-sm text-purple-600">Browse FAQs and guides</p>
+                </div>
+                <div class="p-4 bg-yellow-50 rounded-lg cursor-pointer hover:bg-yellow-100">
+                    <div class="text-3xl mb-2">🎥</div>
+                    <p class="font-medium text-yellow-800">Video Tutorials</p>
+                    <p class="text-sm text-yellow-600">Learn how to use CURA</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-lg mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">My Profile</h3>
+                <button onclick="closeProfile()" class="text-2xl">✕</button>
+            </div>
+            <div class="text-center mb-6">
+                <div class="w-20 h-20 bg-gradient-to-r from-cura-purple to-cura-pink rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-3">👤</div>
+                <h4 class="text-xl font-bold">New Patient</h4>
+                <p class="text-gray-600">Member since today</p>
+            </div>
+            <div class="space-y-3">
+                <button class="w-full flex items-center space-x-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                    <span class="text-xl">✏️</span>
+                    <span class="font-medium">Edit Profile</span>
+                </button>
+                <button class="w-full flex items-center space-x-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                    <span class="text-xl">🔒</span>
+                    <span class="font-medium">Privacy Settings</span>
+                </button>
+                <button class="w-full flex items-center space-x-3 p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                    <span class="text-xl">📊</span>
+                    <span class="font-medium">Health Data</span>
+                </button>
+                <button class="w-full flex items-center space-x-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+                    <span class="text-xl">🚪</span>
+                    <span class="font-medium"><a href="new patient log out.html">Sign Out</a></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-6">
+        <!-- Welcome Hero Section -->
+        <div class="bg-white rounded-2xl p-8 mb-8 card-shadow text-center">
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Welcome to CURA!</h2>
+            <p class="text-xl text-gray-600 mb-6">Let's get your health journey started in just 3 simple steps</p>
+            <div class="flex justify-center space-x-8 mb-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl mb-2 mx-auto">✓</div>
+                    <p class="font-medium">Account Created</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl mb-2 mx-auto step-indicator">2</div>
+                    <p class="font-medium">Setup Profile</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-white text-2xl mb-2 mx-auto">3</div>
+                    <p class="font-medium">Start Tracking</p>
+                </div>
+            </div>
+            <button class="bg-gradient-to-r from-cura-purple to-cura-pink text-white px-12 py-4 rounded-full text-xl font-semibold big-button">
+                🚀 Start Setup (2 minutes)
+            </button>
+        </div>
+
+        <!-- Quick Access Sidebar -->
+        <div class="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 space-y-3">
+            <button class="w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-all hover:scale-110 flex items-center justify-center" onclick="quickBooking()" title="Quick Booking">
+                <span class="text-xl">📅</span>
+            </button>
+            <button class="w-14 h-14 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 flex items-center justify-center" onclick="quickSymptoms()" title="Log Symptoms">
+                <span class="text-xl">🩺</span>
+            </button>
+            <button class="w-14 h-14 bg-purple-500 text-white rounded-full shadow-lg hover:bg-purple-600 transition-all hover:scale-110 flex items-center justify-center" onclick="quickMedication()" title="Add Medication">
+                <span class="text-xl">💊</span>
+            </button>
+            <button class="w-14 h-14 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-all hover:scale-110 flex items-center justify-center" onclick="quickEmergency()" title="Emergency">
+                <span class="text-xl">🚨</span>
+            </button>
+        </div>
+
+        <!-- Quick Start Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-2xl p-6 card-shadow">
+                <div class="text-center">
+                    <div class="text-5xl mb-4">📋</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Book First Visit</h3>
+                    <p class="text-gray-600 mb-6">Schedule your initial consultation with our healthcare team</p>
+                    <button class="w-full bg-blue-500 text-white py-4 rounded-xl text-lg font-semibold big-button hover:bg-blue-600">
+                        📅 Schedule Now
+                    </button>
+                    <p class="text-sm text-blue-600 mt-2">Available today!</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 card-shadow">
+                <div class="text-center">
+                    <div class="text-5xl mb-4">💊</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Add Medications</h3>
+                    <p class="text-gray-600 mb-6">Keep track of your current prescriptions and supplements</p>
+                    <button class="w-full bg-green-500 text-white py-4 rounded-xl text-lg font-semibold big-button hover:bg-green-600">
+                        ➕ Add Medications
+                    </button>
+                    <p class="text-sm text-green-600 mt-2">Takes 30 seconds</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 card-shadow">
+                <div class="text-center">
+                    <div class="text-5xl mb-4">📱</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Get Mobile App</h3>
+                    <p class="text-gray-600 mb-6">Download our app for easy access to your health data</p>
+                    <button class="w-full bg-purple-500 text-white py-4 rounded-xl text-lg font-semibold big-button hover:bg-purple-600">
+                        📲 Download App
+                    </button>
+                    <p class="text-sm text-purple-600 mt-2">Free on all devices</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Setup Cards -->
+        <div class="bg-white rounded-2xl p-8 mb-8 card-shadow">
+            <h3 class="text-3xl font-bold text-gray-800 mb-2 text-center">Set Up Your Health Tracking</h3>
+            <p class="text-gray-600 text-center mb-8 text-lg">Choose what you'd like to monitor (you can add more later)</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="border-2 border-red-200 rounded-xl p-6 hover:border-red-400 transition-colors cursor-pointer" onclick="toggleSetup(this)">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-4xl">❤️</span>
+                            <div>
+                                <h4 class="text-xl font-bold text-red-800">Heart Rate</h4>
+                                <p class="text-red-600">Monitor your heart health</p>
+                            </div>
+                        </div>
+                        <div class="setup-toggle w-6 h-6 border-2 border-red-400 rounded"></div>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <p class="text-sm text-red-700 mb-3">✓ Connect fitness tracker or enter manually</p>
+                        <p class="text-sm text-red-700">✓ Get alerts for unusual readings</p>
+                    </div>
+                </div>
+
+                <div class="border-2 border-blue-200 rounded-xl p-6 hover:border-blue-400 transition-colors cursor-pointer" onclick="toggleSetup(this)">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-4xl">🩺</span>
+                            <div>
+                                <h4 class="text-xl font-bold text-blue-800">Blood Pressure</h4>
+                                <p class="text-blue-600">Track your BP readings</p>
+                            </div>
+                        </div>
+                        <div class="setup-toggle w-6 h-6 border-2 border-blue-400 rounded"></div>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <p class="text-sm text-blue-700 mb-3">✓ Log readings from home monitor</p>
+                        <p class="text-sm text-blue-700">✓ Share data with your doctor</p>
+                    </div>
+                </div>
+
+                <div class="border-2 border-green-200 rounded-xl p-6 hover:border-green-400 transition-colors cursor-pointer" onclick="toggleSetup(this)">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-4xl">👟</span>
+                            <div>
+                                <h4 class="text-xl font-bold text-green-800">Daily Activity</h4>
+                                <p class="text-green-600">Steps, exercise, movement</p>
+                            </div>
+                        </div>
+                        <div class="setup-toggle w-6 h-6 border-2 border-green-400 rounded"></div>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <p class="text-sm text-green-700 mb-3">✓ Set personalized daily goals</p>
+                        <p class="text-sm text-green-700">✓ Track workouts and activities</p>
+                    </div>
+                </div>
+
+                <div class="border-2 border-purple-200 rounded-xl p-6 hover:border-purple-400 transition-colors cursor-pointer" onclick="toggleSetup(this)">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-4xl">😴</span>
+                            <div>
+                                <h4 class="text-xl font-bold text-purple-800">Sleep Quality</h4>
+                                <p class="text-purple-600">Monitor rest and recovery</p>
+                            </div>
+                        </div>
+                        <div class="setup-toggle w-6 h-6 border-2 border-purple-400 rounded"></div>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <p class="text-sm text-purple-700 mb-3">✓ Track sleep duration and quality</p>
+                        <p class="text-sm text-purple-700">✓ Get personalized sleep tips</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <button class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-12 py-4 rounded-full text-xl font-semibold big-button">
+                    ✅ Save My Preferences
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Health Check -->
+        <div class="bg-white rounded-2xl p-8 mb-8 card-shadow">
+            <h3 class="text-3xl font-bold text-gray-800 mb-6 text-center">Quick Health Check</h3>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+                    <h4 class="text-2xl font-bold text-yellow-800 mb-4">😊 How are you feeling today?</h4>
+                    <div class="flex justify-center space-x-4 mb-6">
+                        <button class="mood-btn text-5xl p-3 rounded-full hover:bg-yellow-100 transition-colors" onclick="selectMood(this, 'Great')" data-mood="5">😄</button>
+                        <button class="mood-btn text-5xl p-3 rounded-full hover:bg-yellow-100 transition-colors" onclick="selectMood(this, 'Good')" data-mood="4">😊</button>
+                        <button class="mood-btn text-5xl p-3 rounded-full hover:bg-yellow-100 transition-colors" onclick="selectMood(this, 'Okay')" data-mood="3">😐</button>
+                        <button class="mood-btn text-5xl p-3 rounded-full hover:bg-yellow-100 transition-colors" onclick="selectMood(this, 'Not great')" data-mood="2">😟</button>
+                        <button class="mood-btn text-5xl p-3 rounded-full hover:bg-yellow-100 transition-colors" onclick="selectMood(this, 'Poor')" data-mood="1">😢</button>
+                    </div>
+                    <p id="moodFeedback" class="text-center text-yellow-700 font-medium"></p>
+                </div>
+
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                    <h4 class="text-2xl font-bold text-orange-800 mb-4">🩹 Any pain or discomfort?</h4>
+                    <div class="mb-4">
+                        <input type="range" id="painLevel" min="0" max="10" value="0" class="w-full h-4 bg-orange-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div class="flex justify-between text-lg text-orange-600 mb-4">
+                        <span>😌 No pain</span>
+                        <span id="painValue" class="font-bold text-2xl">0</span>
+                        <span>😣 Severe</span>
+                    </div>
+                    <p id="painFeedback" class="text-center text-orange-700 font-medium"></p>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <button class="bg-gradient-to-r from-cura-purple to-cura-pink text-white px-12 py-4 rounded-full text-xl font-semibold big-button" onclick="submitHealthCheck()">
+                    📝 Submit Health Check
+                </button>
+            </div>
+        </div>
+
+        <!-- Emergency & Support -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-6 card-shadow">
+                <div class="text-center">
+                    <div class="text-5xl mb-4">🚨</div>
+                    <h3 class="text-2xl font-bold text-red-800 mb-3">Emergency</h3>
+                    <p class="text-red-600 mb-6">For immediate medical attention</p>
+                    <button class="w-full bg-red-500 text-white py-4 rounded-xl text-lg font-semibold big-button hover:bg-red-600">
+                        🚑 Call Emergency Services
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 card-shadow">
+                <div class="text-center">
+                    <div class="text-5xl mb-4">💬</div>
+                    <h3 class="text-2xl font-bold text-blue-800 mb-3">Need Help?</h3>
+                    <p class="text-blue-600 mb-6">Chat with our support team</p>
+                    <button class="w-full bg-blue-500 text-white py-4 rounded-xl text-lg font-semibold big-button hover:bg-blue-600">
+                        💬 Live Chat Support
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle setup selection
+        function toggleSetup(element) {
+            const toggle = element.querySelector('.setup-toggle');
+            if (toggle.classList.contains('bg-green-500')) {
+                toggle.classList.remove('bg-green-500');
+                toggle.innerHTML = '';
+            } else {
+                toggle.classList.add('bg-green-500');
+                toggle.innerHTML = '<span class="text-white text-sm">✓</span>';
+            }
+        }
+
+        // Mood selector
+        function selectMood(element, feeling) {
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.classList.remove('bg-yellow-200', 'ring-4', 'ring-yellow-400');
+            });
+            element.classList.add('bg-yellow-200', 'ring-4', 'ring-yellow-400');
+            document.getElementById('moodFeedback').textContent = `You're feeling ${feeling} today`;
+        }
+
+        // Pain level slider
+        const painSlider = document.getElementById('painLevel');
+        const painValue = document.getElementById('painValue');
+        const painFeedback = document.getElementById('painFeedback');
+
+        painSlider.addEventListener('input', function() {
+            const value = this.value;
+            painValue.textContent = value;
+            
+            if (value == 0) {
+                painFeedback.textContent = "Great! No pain reported";
+            } else if (value <= 3) {
+                painFeedback.textContent = "Mild discomfort noted";
+            } else if (value <= 6) {
+                painFeedback.textContent = "Moderate pain - consider speaking with a doctor";
+            } else {
+                painFeedback.textContent = "Severe pain - please seek medical attention";
+            }
+        });
+
+        // Submit health check
+        function submitHealthCheck() {
+            alert('Health check submitted! Your healthcare team has been notified of your status.');
+        }
+
+        // Modal functions
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function openSearch() {
+            document.getElementById('searchModal').classList.remove('hidden');
+            document.getElementById('searchInput').focus();
+            toggleMobileMenu();
+        }
+
+        function closeSearch() {
+            document.getElementById('searchModal').classList.add('hidden');
+        }
+
+        function openNotifications() {
+            document.getElementById('notificationsModal').classList.remove('hidden');
+            toggleMobileMenu();
+        }
+
+        function closeNotifications() {
+            document.getElementById('notificationsModal').classList.add('hidden');
+        }
+
+        function openHelp() {
+            document.getElementById('helpModal').classList.remove('hidden');
+            toggleMobileMenu();
+        }
+
+        function closeHelp() {
+            document.getElementById('helpModal').classList.add('hidden');
+        }
+
+        function openProfile() {
+            document.getElementById('profileModal').classList.remove('hidden');
+            toggleMobileMenu();
+        }
+
+        function closeProfile() {
+            document.getElementById('profileModal').classList.add('hidden');
+        }
+
+        // Quick access functions
+        function quickBooking() {
+            alert('📅 Quick Booking: Opening appointment scheduler...');
+        }
+
+        function quickSymptoms() {
+            alert('🩺 Quick Symptoms: Opening symptom tracker...');
+        }
+
+        function quickMedication() {
+            alert('💊 Quick Medication: Opening medication manager...');
+        }
+
+        function quickEmergency() {
+            if (confirm('🚨 Emergency: Do you need immediate medical assistance?')) {
+                alert('Connecting you to emergency services...');
+            }
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            const modals = ['searchModal', 'notificationsModal', 'helpModal', 'profileModal', 'mobileMenu'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (event.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        });
+
+        // Add helpful animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const cards = document.querySelectorAll('.card-shadow');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e1bad62763814e',t:'MTc1NTAyMDEzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

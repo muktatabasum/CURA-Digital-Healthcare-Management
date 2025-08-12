@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURA Log-in </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#1e40af',
+                        accent: '#3b82f6'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        .login-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-sans">
+    
+    <!-- Login Selection Page -->
+    <div id="login-selection" class="min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-4xl w-full">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">🏥 CURA</h1>
+                <p class="text-xl text-gray-600">Choose your login type to access the system</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Doctor Login Card -->
+                <div class="login-card rounded-2xl shadow-xl p-8 text-center hover:shadow-2xl transition duration-300 cursor-pointer" onclick="showLogin('doctor')">
+                    <div class="text-6xl mb-6">👨‍⚕️</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Doctor Login</h3>
+                    <p class="text-gray-600 mb-6">Access patient records, manage appointments, and prescribe medicines</p>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition duration-200 w-full">
+                        Login as Doctor
+                    </button>
+                </div>
+                
+                <!-- Patient Login Card -->
+                <div class="login-card rounded-2xl shadow-xl p-8 text-center hover:shadow-2xl transition duration-300 cursor-pointer" onclick="showLogin('patient')">
+                    <div class="text-6xl mb-6">👤</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Patient Login</h3>
+                    <p class="text-gray-600 mb-6">Book appointments, view medical history, and manage your health</p>
+                    <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition duration-200 w-full">
+                        Login as Patient
+                    </button>
+                </div>
+                
+                <!-- Admin Login Card -->
+                <div class="login-card rounded-2xl shadow-xl p-8 text-center hover:shadow-2xl transition duration-300 cursor-pointer" onclick="showLogin('admin')">
+                    <div class="text-6xl mb-6">👨‍💼</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Admin Login</h3>
+                    <p class="text-gray-600 mb-6">Manage system settings, users, and oversee operations</p>
+                    <button class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition duration-200 w-full">
+                        Login as Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor Login Form -->
+    <div id="doctor-login" class="min-h-screen flex items-center justify-center px-4 hidden">
+        <div class="max-w-md w-full">
+            <div class="login-card rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <div class="text-5xl mb-4">👨‍⚕️</div>
+                    <h2 class="text-3xl font-bold text-gray-900">Doctor Login</h2>
+                    <p class="text-gray-600 mt-2">Access your medical dashboard</p>
+                </div>
+                
+                <form id="doctor-login-form" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Doctor ID</label>
+                        <input type="text" id="doctor-id" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your doctor ID" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="doctor-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                        </label>
+                        <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition duration-200 font-medium">
+                       <a href="11.doctor portal.html"> Login to Dashboard </a>
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <button onclick="showLoginSelection()" class="text-gray-600 hover:text-gray-800 text-sm">← Back to login selection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Login Form -->
+    <div id="patient-login" class="min-h-screen flex items-center justify-center px-4 hidden">
+        <div class="max-w-md w-full">
+            <div class="login-card rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <div class="text-5xl mb-4">👤</div>
+                    <h2 class="text-3xl font-bold text-gray-900">Patient Login</h2>
+                    <p class="text-gray-600 mt-2">Access your health portal</p>
+                </div>
+                
+                <form id="patient-login-form" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Patient ID</label>
+                        <input type="text" id="patient-id" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter your patient ID" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="patient-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500">
+                            <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                        </label>
+                        <a href="#" class="text-sm text-green-600 hover:text-green-800">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition duration-200 font-medium">
+                        <a href="patient dashboard.html">Login to Portal</a>
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600 mb-2">Don't have an account?</p>
+                    <button onclick="showPatientRegistration()" class="text-green-600 hover:text-green-800 text-sm font-medium">Register as New Patient</button>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <button onclick="showLoginSelection()" class="text-gray-600 hover:text-gray-800 text-sm">← Back to login selection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Form -->
+    <div id="admin-login" class="min-h-screen flex items-center justify-center px-4 hidden">
+        <div class="max-w-md w-full">
+            <div class="login-card rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <div class="text-5xl mb-4">👨‍💼</div>
+                    <h2 class="text-3xl font-bold text-gray-900">Admin Login</h2>
+                    <p class="text-gray-600 mt-2">System administration access</p>
+                </div>
+                
+                <form id="admin-login-form" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Admin Username</label>
+                        <input type="text" id="admin-username" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter admin username" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="admin-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter admin password" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Security Code</label>
+                        <input type="text" id="admin-security" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter security code" required>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg transition duration-200 font-medium">
+                       <a href="1.Admin Portal.html"> Access Admin Panel </a>
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <button onclick="showLoginSelection()" class="text-gray-600 hover:text-gray-800 text-sm">← Back to login selection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Registration Form -->
+    <div id="patient-registration" class="min-h-screen flex items-center justify-center px-4 hidden">
+        <div class="max-w-2xl w-full">
+            <div class="login-card rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <div class="text-5xl mb-4">📝</div>
+                    <h2 class="text-3xl font-bold text-gray-900">Patient Registration</h2>
+                    <p class="text-gray-600 mt-2">Create your health portal account</p>
+                </div>
+                
+                <form id="patient-registration-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                        <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter first name" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                        <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter last name" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                        <input type="date" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                            <option value="">Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                        <input type="tel" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter phone number" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter email address" required>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                        <textarea rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter full address" required></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Create password" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                        <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Confirm password" required>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500" required>
+                            <span class="ml-2 text-sm text-gray-600">I agree to the Terms of Service and Privacy Policy</span>
+                        </label>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition duration-200 font-medium">
+                          <a href="new patient.html">Create Account</a>
+                        </button>
+                        
+                    </div>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <button onclick="showLogin('patient')" class="text-green-600 hover:text-green-800 text-sm">← Back to patient login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard (shown after login) -->
+    <div id="main-dashboard" class="hidden">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-lg sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <h1 class="text-2xl font-bold text-primary">🏥 CURA</h1>
+                        </div>
+                        <div class="ml-4">
+                            <span id="user-role-display" class="text-sm text-gray-600"></span>
+                        </div>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <button onclick="showSection('dashboard')" class="nav-btn bg-primary text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</button>
+                            <button onclick="showSection('appointments')" class="nav-btn text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Appointments</button>
+                            <button onclick="showSection('patients')" class="nav-btn text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Patients</button>
+                            <button onclick="showSection('medicines')" class="nav-btn text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Medicines</button>
+                            <button onclick="logout()" class="text-red-600 hover:text-red-800 px-3 py-2 rounded-md text-sm font-medium">Logout</button>
+                        </div>
+                    </div>
+                    <div class="md:hidden">
+                        <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-primary">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="md:hidden hidden bg-white border-t">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <button onclick="showSection('dashboard')" class="block px-3 py-2 text-base font-medium text-primary bg-gray-100 rounded-md w-full text-left">Dashboard</button>
+                    <button onclick="showSection('appointments')" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 rounded-md w-full text-left">Appointments</button>
+                    <button onclick="showSection('patients')" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 rounded-md w-full text-left">Patients</button>
+                    <button onclick="showSection('medicines')" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 rounded-md w-full text-left">Medicines</button>
+                    <button onclick="logout()" class="block px-3 py-2 text-base font-medium text-red-600 hover:bg-gray-100 rounded-md w-full text-left">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <script>
+
+        // Demo credentials
+        const demoCredentials = {
+            doctor: { id: "DOC001", password: "doctor123" },
+            patient: { id: "PAT001", password: "patient123" },
+            admin: { username: "admin", password: "admin123", security: "SEC2025" }
+        };
+
+        // Login functions
+        function showLoginSelection() {
+            hideAllSections();
+            document.getElementById('login-selection').classList.remove('hidden');
+        }
+
+        function showLogin(type) {
+            hideAllSections();
+            document.getElementById(type + '-login').classList.remove('hidden');
+        }
+
+        function showPatientRegistration() {
+            hideAllSections();
+            document.getElementById('patient-registration').classList.remove('hidden');
+        }
+
+        function hideAllSections() {
+            const sections = ['login-selection', 'doctor-login', 'patient-login', 'admin-login', 'patient-registration', 'main-dashboard'];
+            sections.forEach(section => {
+                document.getElementById(section).classList.add('hidden');
+            });
+        }
+
+        // Login form handlers
+        document.getElementById('doctor-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('doctor-id').value;
+            const password = document.getElementById('doctor-password').value;
+            
+            if (id === demoCredentials.doctor.id && password === demoCredentials.doctor.password) {
+                currentUser = { role: 'doctor', id: id, name: 'Dr. Sarah Johnson' };
+                showDashboard();
+            } else {
+                showSuccessModal('Invalid credentials. Try ID: DOC001, Password: doctor123');
+            }
+        });
+
+        document.getElementById('patient-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('patient-id').value;
+            const password = document.getElementById('patient-password').value;
+            
+            if (id === demoCredentials.patient.id && password === demoCredentials.patient.password) {
+                currentUser = { role: 'patient', id: id, name: 'John Smith' };
+                showDashboard();
+            } else {
+                showSuccessModal('Invalid credentials. Try ID: PAT001, Password: patient123');
+            }
+        });
+
+        document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            const security = document.getElementById('admin-security').value;
+            
+            if (username === demoCredentials.admin.username && 
+                password === demoCredentials.admin.password && 
+                security === demoCredentials.admin.security) {
+                currentUser = { role: 'admin', id: username, name: 'System Administrator' };
+                showDashboard();
+            } else {
+                showSuccessModal('Invalid credentials. Try Username: admin, Password: admin123, Security: SEC2024');
+            }
+        });
+
+        document.getElementById('patient-registration-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showSuccessModal('Registration successful! Your patient ID is PAT' + Math.floor(Math.random() * 1000) + '. Please login with your new credentials.');
+            showLogin('patient');
+        });
+
+        function showDashboard() {
+            hideAllSections();
+            document.getElementById('main-dashboard').classList.remove('hidden');
+            document.getElementById('user-role-display').textContent = `Logged in as: ${currentUser.name} (${currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)})`;
+            
+            // Load initial data
+            loadAppointments();
+            updateDashboardStats();
+        }
+
+        function logout() {
+            currentUser = { role: null, id: null, name: null };
+            showLoginSelection();
+        }
+
+        // Navigation functions
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+            document.getElementById(sectionName + '-section').classList.add('fade-in');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('text-gray-700', 'hover:bg-gray-100');
+            });
+            
+            event.target.classList.add('bg-primary', 'text-white');
+            event.target.classList.remove('text-gray-700', 'hover:bg-gray-100');
+            
+            // Load section-specific data
+            if (sectionName === 'appointments') {
+                loadAppointments();
+            } else if (sectionName === 'patients') {
+                loadPatients();
+            } else if (sectionName === 'medicines') {
+                loadMedicineInventory();
+            }
+            
+            // Close mobile menu
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Dashboard functions
+        function updateDashboardStats() {
+            const totalStock = medicines.reduce((sum, med) => sum + med.stock, 0);
+            const lowStockCount = medicines.filter(med => med.stock <= med.minStock).length;
+            document.getElementById('medicines-stock').textContent = totalStock;
+            document.getElementById('low-stock').textContent = lowStockCount;
+            document.getElementById('total-patients').textContent = patients.length;
+            document.getElementById('today-appointments').textContent = appointments.length;
+        }
+
+        // Appointment functions
+        function loadAppointments() {
+            const appointmentsList = document.getElementById('appointments-list');
+            appointmentsList.innerHTML = '';
+            
+            appointments.forEach(appointment => {
+                const appointmentCard = document.createElement('div');
+                appointmentCard.className = 'border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-200';
+                appointmentCard.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${appointment.patient}</h4>
+                            <p class="text-sm text-gray-600">Doctor: ${appointment.doctor}</p>
+                            <p class="text-sm text-gray-600">Time: ${appointment.time}</p>
+                            <p class="text-sm text-gray-600">Reason: ${appointment.reason}</p>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="px-2 py-1 text-xs rounded-full ${appointment.status === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${appointment.status}</span>
+                            <button onclick="cancelAppointment(${appointment.id})" class="mt-2 text-red-600 hover:text-red-800 text-sm">Cancel</button>
+                        </div>
+                    </div>
+                `;
+                appointmentsList.appendChild(appointmentCard);
+            });
+        }
+
+        document.getElementById('appointment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newAppointment = {
+                id: appointments.length + 1,
+                patient: document.getElementById('patient-name').value,
+                doctor: document.getElementById('doctor-select').value,
+                date: document.getElementById('appointment-date').value,
+                time: document.getElementById('appointment-time').value,
+                reason: document.getElementById('visit-reason').value,
+                status: 'confirmed'
+            };
+            
+            appointments.push(newAppointment);
+            loadAppointments();
+            updateDashboardStats();
+            
+            showSuccessModal('Appointment booked successfully!');
+            this.reset();
+        });
+
+        function cancelAppointment(id) {
+            appointments = appointments.filter(app => app.id !== id);
+            loadAppointments();
+            updateDashboardStats();
+            showSuccessModal('Appointment cancelled successfully!');
+        }
+
+        // Patient functions
+        function loadPatients() {
+            const patientResults = document.getElementById('patient-results');
+            patientResults.innerHTML = '';
+            
+            patients.forEach(patient => {
+                const patientCard = document.createElement('div');
+                patientCard.className = 'border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-200';
+                patientCard.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${patient.name}</h4>
+                            <p class="text-sm text-gray-600">ID: ${patient.id}</p>
+                            <p class="text-sm text-gray-600">Age: ${patient.age}</p>
+                            <p class="text-sm text-gray-600">Phone: ${patient.phone}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Email: ${patient.email}</p>
+                            <p class="text-sm text-gray-600">Last Visit: ${patient.lastVisit}</p>
+                            <p class="text-sm text-gray-600">Condition: ${patient.condition}</p>
+                            <button onclick="viewPatientHistory('${patient.id}')" class="mt-2 bg-primary hover:bg-secondary text-white px-3 py-1 rounded text-sm">View History</button>
+                        </div>
+                    </div>
+                `;
+                patientResults.appendChild(patientCard);
+            });
+        }
+
+        function searchPatients() {
+            const searchTerm = document.getElementById('patient-search').value.toLowerCase();
+            const filteredPatients = patients.filter(patient => 
+                patient.name.toLowerCase().includes(searchTerm) ||
+                patient.id.toLowerCase().includes(searchTerm) ||
+                patient.phone.includes(searchTerm)
+            );
+            
+            const patientResults = document.getElementById('patient-results');
+            patientResults.innerHTML = '';
+            
+            if (filteredPatients.length === 0) {
+                patientResults.innerHTML = '<p class="text-gray-500 text-center py-4">No patients found matching your search.</p>';
+                return;
+            }
+            
+            filteredPatients.forEach(patient => {
+                const patientCard = document.createElement('div');
+                patientCard.className = 'border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-200';
+                patientCard.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${patient.name}</h4>
+                            <p class="text-sm text-gray-600">ID: ${patient.id}</p>
+                            <p class="text-sm text-gray-600">Age: ${patient.age}</p>
+                            <p class="text-sm text-gray-600">Phone: ${patient.phone}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Email: ${patient.email}</p>
+                            <p class="text-sm text-gray-600">Last Visit: ${patient.lastVisit}</p>
+                            <p class="text-sm text-gray-600">Condition: ${patient.condition}</p>
+                            <button onclick="viewPatientHistory('${patient.id}')" class="mt-2 bg-primary hover:bg-secondary text-white px-3 py-1 rounded text-sm">View History</button>
+                        </div>
+                    </div>
+                `;
+                patientResults.appendChild(patientCard);
+            });
+        }
+
+        function viewPatientHistory(patientId) {
+            const patient = patients.find(p => p.id === patientId);
+            showSuccessModal(`Viewing detailed history for ${patient.name}. In a real system, this would show complete medical records, previous visits, prescriptions, and test results.`);
+        }
+
+        // Medicine functions
+        function loadMedicineInventory() {
+            const inventoryTable = document.getElementById('medicine-inventory');
+            inventoryTable.innerHTML = '';
+            
+            medicines.forEach(medicine => {
+                const row = document.createElement('tr');
+                const isLowStock = medicine.stock <= medicine.minStock;
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${medicine.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${medicine.stock}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${isLowStock ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">
+                            ${isLowStock ? 'Low Stock' : 'In Stock'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <button onclick="restockMedicine('${medicine.name}')" class="text-primary hover:text-secondary mr-3">Restock</button>
+                        <button onclick="updatePrice('${medicine.name}')" class="text-green-600 hover:text-green-800">Update Price</button>
+                    </td>
+                `;
+                inventoryTable.appendChild(row);
+            });
+        }
+
+        document.getElementById('prescription-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const medicineName = document.getElementById('medicine-select').value;
+            const medicine = medicines.find(m => m.name === medicineName);
+            
+            if (medicine && medicine.stock > 0) {
+                medicine.stock -= 1;
+                loadMedicineInventory();
+                updateDashboardStats();
+                
+                showSuccessModal('Prescription created successfully! Medicine stock updated.');
+                this.reset();
+            } else {
+                showSuccessModal('Error: Selected medicine is out of stock!');
+            }
+        });
+
+        function restockMedicine(medicineName) {
+            const medicine = medicines.find(m => m.name === medicineName);
+            if (medicine) {
+                medicine.stock += 50;
+                loadMedicineInventory();
+                updateDashboardStats();
+                showSuccessModal(`${medicineName} restocked successfully! Added 50 units.`);
+            }
+        }
+
+        function updatePrice(medicineName) {
+            const newPrice = prompt(`Enter new price for ${medicineName}:`);
+            if (newPrice && !isNaN(newPrice)) {
+                const medicine = medicines.find(m => m.name === medicineName);
+                if (medicine) {
+                    medicine.price = parseFloat(newPrice);
+                    showSuccessModal(`Price updated for ${medicineName}: $${newPrice}`);
+                }
+            }
+        }
+
+        // Utility functions
+        function showSuccessModal(message) {
+            document.getElementById('success-message').textContent = message;
+            document.getElementById('success-modal').classList.remove('hidden');
+            document.getElementById('success-modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+            document.getElementById('success-modal').classList.remove('flex');
+        }
+
+        function generateReport() {
+            showSuccessModal('Healthcare report generated successfully! In a real system, this would create a comprehensive PDF report with patient statistics, appointment summaries, and medicine inventory data.');
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set minimum date to today for appointments
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointment-date').setAttribute('min', today);
+            
+            // Show login selection by default
+            showLoginSelection();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'969677eb3500ba4f',t:'MTc1NDIzMDk2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURA - Prescription Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'medical-blue': '#1e40af',
+                        'medical-green': '#059669',
+                        'medical-red': '#dc2626',
+                        'medical-orange': '#ea580c',
+                        'medical-purple': '#7c3aed'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .demo-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 1000;
+            font-size: 12px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .prescription-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .prescription-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .urgent-prescription {
+            border-left-color: #ef4444;
+            animation: urgentPulse 3s infinite;
+        }
+        
+        @keyframes urgentPulse {
+            0%, 100% { border-left-color: #ef4444; }
+            50% { border-left-color: #fca5a5; }
+        }
+        
+        .completed-prescription {
+            border-left-color: #10b981;
+            opacity: 0.8;
+        }
+        
+        .pending-prescription {
+            border-left-color: #f59e0b;
+        }
+        
+        .gradient-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .drug-search-result {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .drug-search-result:hover {
+            background: #f3f4f6;
+        }
+        
+        .dosage-button {
+            transition: all 0.2s ease;
+        }
+        
+        .dosage-button.selected {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .interaction-warning {
+            animation: warningPulse 2s infinite;
+        }
+        
+        @keyframes warningPulse {
+            0%, 100% { background-color: #fef3c7; }
+            50% { background-color: #fde68a; }
+        }
+        
+        .signature-pad {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            background: #f9fafb;
+            cursor: crosshair;
+        }
+        
+        .signature-pad.signed {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .print-prescription {
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-prescription, .print-prescription * {
+                visibility: visible;
+            }
+            .print-prescription {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            min-width: 300px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-pending { background: #f59e0b; animation: blink 2s infinite; }
+        .status-approved { background: #10b981; }
+        .status-dispensed { background: #3b82f6; }
+        .status-expired { background: #ef4444; }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+   
+    <!-- Header -->
+    <header class="gradient-header text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                        <span class="text-2xl">💊</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">New Prescription </h1>
+                        <p class="text-sm opacity-90">Advanced E-Prescribing Platform</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="text-right">
+                        <p class="font-semibold">Dr. Mukta Tabassum </p>
+                        <p class="text-sm opacity-90">MBBS(DMC),FCPS(MEDICINE)</p>
+                        <p class="text-xs opacity-75">Medicine Specialist, Associate Professor</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <span class="text-lg">👩‍⚕️</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+                <form id="newPrescriptionForm" class="space-y-6">
+                    <!-- Patient Selection -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Patient Search</label>
+                            <div class="relative">
+                                <input type="text" placeholder="Search patient by name or ID..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="patientSearch" oninput="searchPatients()">
+                                <div id="patientSearchResults" class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg mt-1 hidden max-h-60 overflow-y-auto z-10">
+                                    <!-- Search results will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Selected Patient</label>
+                            <div id="selectedPatient" class="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500">
+                                No patient selected
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medication Search -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Medication Search</label>
+                        <div class="relative">
+                            <input type="text" placeholder="Search medication by name or generic..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="medicationSearch" oninput="searchMedications()">
+                            <div id="medicationSearchResults" class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg mt-1 hidden max-h-60 overflow-y-auto z-10">
+                                <!-- Medication search results will appear here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Medications -->
+                    <div id="selectedMedications" class="space-y-4">
+                        <!-- Selected medications will appear here -->
+                    </div>
+
+                    <!-- Prescription Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Diagnosis/Indication</label>
+                            <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" rows="3" placeholder="Enter primary diagnosis or indication for prescription..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Special Instructions</label>
+                            <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" rows="3" placeholder="Any special instructions for patient or pharmacy..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Pharmacy Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Pharmacy</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select pharmacy...</option>
+                            <option value="cvs-1234">CVS Pharmacy #1234 - 123 Main St</option>
+                            <option value="walgreens-5678">Walgreens #5678 - 456 Oak Ave</option>
+                            <option value="rite-aid-9012">Rite Aid #9012 - 789 Pine Rd</option>
+                            <option value="independent">Local Independent Pharmacy</option>
+                        </select>
+                    </div>
+
+                    <!-- Drug Interaction Check -->
+                    <div id="interactionWarnings" class="hidden">
+                        <div class="interaction-warning border border-yellow-400 rounded-lg p-4">
+                            <div class="flex items-start space-x-2">
+                                <span class="text-yellow-600 text-lg">⚠️</span>
+                                <div>
+                                    <h4 class="font-medium text-yellow-800 mb-2">Drug Interaction Warning</h4>
+                                    <div id="interactionDetails" class="text-sm text-yellow-700">
+                                        <!-- Interaction details will appear here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Digital Signature -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Digital Signature</label>
+                        <div class="signature-pad w-full h-32 flex items-center justify-center" id="signaturePad" onclick="addSignature()">
+                            <span class="text-gray-500">Click to add digital signature</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-4 pt-6 border-t border-gray-200">
+                        <button type="button" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-medium" onclick="saveDraft()">
+                            💾 Save Draft
+                        </button>
+                        <button type="button" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-medium" onclick="sendPrescription()">
+                            📤 Send to Pharmacy
+                        </button>
+                        <button type="button" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 font-medium" onclick="printPrescriptionForm()">
+                            🖨️ Print Prescription
+                        </button>
+                        <button type="button" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 font-medium" onclick="clearForm()">
+                            🗑️ Clear Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    <!-- Prescription Details Modal -->
+    <div id="prescriptionModal" class="modal">
+        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-semibold">Prescription Details</h2>
+                    <button onclick="closeModal('prescriptionModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                </div>
+            </div>
+            <div class="p-6" id="prescriptionModalContent">
+                <!-- Prescription details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const samplePatients = [
+            { id: 'P001', name: 'Maria Garcia', dob: '03/15/1961', age: 62, allergies: ['Penicillin', 'Shellfish'] },
+            { id: 'P002', name: 'John Smith', dob: '08/22/1978', age: 45, allergies: ['None known'] },
+            { id: 'P003', name: 'Robert Wilson', dob: '11/05/1955', age: 68, allergies: ['Sulfa drugs'] },
+            { id: 'P004', name: 'Lisa Chen', dob: '06/12/1985', age: 38, allergies: ['Latex'] },
+            { id: 'P005', name: 'David Brown', dob: '09/30/1992', age: 31, allergies: ['None known'] }
+        ];
+
+        const sampleMedications = [
+            { name: 'Lisinopril', generic: 'Lisinopril', strength: ['5mg', '10mg', '20mg'], category: 'ACE Inhibitor' },
+            { name: 'Napa', generic: 'Paracetamol', strength: ['500mg', '650mg', '1000mg'], category: 'ACE Inhibitor' },
+            { name: 'Metformin', generic: 'Metformin HCl', strength: ['500mg', '850mg', '1000mg'], category: 'Antidiabetic' },
+            { name: 'Atorvastatin', generic: 'Atorvastatin Calcium', strength: ['10mg', '20mg', '40mg', '80mg'], category: 'Statin' },
+            { name: 'Metoprolol', generic: 'Metoprolol Tartrate', strength: ['25mg', '50mg', '100mg'], category: 'Beta Blocker' },
+            { name: 'Amlodipine', generic: 'Amlodipine Besylate', strength: ['2.5mg', '5mg', '10mg'], category: 'Calcium Channel Blocker' },
+            { name: 'Omeprazole', generic: 'Omeprazole', strength: ['20mg', '40mg'], category: 'Proton Pump Inhibitor' },
+            { name: 'Aspirin', generic: 'Acetylsalicylic Acid', strength: ['81mg', '325mg'], category: 'Antiplatelet' }
+        ];
+
+        let selectedPatient = null;
+        let selectedMedications = [];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('active-prescriptions');
+        });
+
+        // Tab navigation
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.remove('hidden');
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-b-2', 'border-medical-blue', 'text-medical-blue');
+                btn.classList.add('text-gray-600');
+            });
+            
+            event.target.classList.remove('text-gray-600');
+            event.target.classList.add('border-b-2', 'border-medical-blue', 'text-medical-blue');
+        }
+
+        // Search patients
+        function searchPatients() {
+            const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
+            const resultsContainer = document.getElementById('patientSearchResults');
+            
+            if (searchTerm.length < 2) {
+                resultsContainer.classList.add('hidden');
+                return;
+            }
+
+            const filteredPatients = samplePatients.filter(patient => 
+                patient.name.toLowerCase().includes(searchTerm) || 
+                patient.id.toLowerCase().includes(searchTerm)
+            );
+
+            if (filteredPatients.length > 0) {
+                resultsContainer.innerHTML = filteredPatients.map(patient => `
+                    <div class="drug-search-result p-3 border-b border-gray-200 last:border-b-0" onclick="selectPatient('${patient.id}')">
+                        <div class="font-medium">${patient.name}</div>
+                        <div class="text-sm text-gray-600">ID: ${patient.id} • DOB: ${patient.dob} • Age: ${patient.age}</div>
+                        <div class="text-xs text-gray-500">Allergies: ${patient.allergies.join(', ')}</div>
+                    </div>
+                `).join('');
+                resultsContainer.classList.remove('hidden');
+            } else {
+                resultsContainer.innerHTML = '<div class="p-3 text-gray-500">No patients found</div>';
+                resultsContainer.classList.remove('hidden');
+            }
+        }
+
+        // Select patient
+        function selectPatient(patientId) {
+            selectedPatient = samplePatients.find(p => p.id === patientId);
+            if (selectedPatient) {
+                document.getElementById('selectedPatient').innerHTML = `
+                    <div class="text-left">
+                        <div class="font-medium text-gray-800">${selectedPatient.name}</div>
+                        <div class="text-sm text-gray-600">ID: ${selectedPatient.id} • DOB: ${selectedPatient.dob} • Age: ${selectedPatient.age}</div>
+                        <div class="text-xs text-red-600 mt-1">⚠️ Allergies: ${selectedPatient.allergies.join(', ')}</div>
+                    </div>
+                `;
+                document.getElementById('patientSearchResults').classList.add('hidden');
+                document.getElementById('patientSearch').value = selectedPatient.name;
+            }
+        }
+
+        // Search medications
+        function searchMedications() {
+            const searchTerm = document.getElementById('medicationSearch').value.toLowerCase();
+            const resultsContainer = document.getElementById('medicationSearchResults');
+            
+            if (searchTerm.length < 2) {
+                resultsContainer.classList.add('hidden');
+                return;
+            }
+
+            const filteredMedications = sampleMedications.filter(med => 
+                med.name.toLowerCase().includes(searchTerm) || 
+                med.generic.toLowerCase().includes(searchTerm)
+            );
+
+            if (filteredMedications.length > 0) {
+                resultsContainer.innerHTML = filteredMedications.map(med => `
+                    <div class="drug-search-result p-3 border-b border-gray-200 last:border-b-0" onclick="selectMedication('${med.name}')">
+                        <div class="font-medium">${med.name} (${med.generic})</div>
+                        <div class="text-sm text-gray-600">Category: ${med.category}</div>
+                        <div class="text-xs text-gray-500">Available strengths: ${med.strength.join(', ')}</div>
+                    </div>
+                `).join('');
+                resultsContainer.classList.remove('hidden');
+            } else {
+                resultsContainer.innerHTML = '<div class="p-3 text-gray-500">No medications found</div>';
+                resultsContainer.classList.remove('hidden');
+            }
+        }
+
+        // Select medication
+        function selectMedication(medicationName) {
+            const medication = sampleMedications.find(m => m.name === medicationName);
+            if (medication && !selectedMedications.find(m => m.name === medicationName)) {
+                selectedMedications.push({
+                    ...medication,
+                    selectedStrength: medication.strength[0],
+                    dosage: 'Once daily',
+                    quantity: '30',
+                    refills: '2'
+                });
+                updateSelectedMedications();
+                document.getElementById('medicationSearchResults').classList.add('hidden');
+                document.getElementById('medicationSearch').value = '';
+                checkDrugInteractions();
+            }
+        }
+
+        // Update selected medications display
+        function updateSelectedMedications() {
+            const container = document.getElementById('selectedMedications');
+            container.innerHTML = selectedMedications.map((med, index) => `
+                <div class="border border-gray-300 rounded-lg p-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="font-medium text-gray-800">${med.name} (${med.generic})</h4>
+                            <p class="text-sm text-gray-600">${med.category}</p>
+                        </div>
+                        <button onclick="removeMedication(${index})" class="text-red-600 hover:text-red-800">
+                            <span class="text-lg">×</span>
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Strength</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" onchange="updateMedication(${index}, 'selectedStrength', this.value)">
+                                ${med.strength.map(strength => `
+                                    <option value="${strength}" ${strength === med.selectedStrength ? 'selected' : ''}>${strength}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Dosage</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" onchange="updateMedication(${index}, 'dosage', this.value)">
+                                <option value="Once daily" ${med.dosage === 'Once daily' ? 'selected' : ''}>Once daily</option>
+                                <option value="Twice daily" ${med.dosage === 'Twice daily' ? 'selected' : ''}>Twice daily</option>
+                                <option value="Three times daily" ${med.dosage === 'Three times daily' ? 'selected' : ''}>Three times daily</option>
+                                <option value="Four times daily" ${med.dosage === 'Four times daily' ? 'selected' : ''}>Four times daily</option>
+                                <option value="As needed" ${med.dosage === 'As needed' ? 'selected' : ''}>As needed</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                            <input type="number" value="${med.quantity}" class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" onchange="updateMedication(${index}, 'quantity', this.value)">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Refills</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" onchange="updateMedication(${index}, 'refills', this.value)">
+                                <option value="0" ${med.refills === '0' ? 'selected' : ''}>0</option>
+                                <option value="1" ${med.refills === '1' ? 'selected' : ''}>1</option>
+                                <option value="2" ${med.refills === '2' ? 'selected' : ''}>2</option>
+                                <option value="3" ${med.refills === '3' ? 'selected' : ''}>3</option>
+                                <option value="5" ${med.refills === '5' ? 'selected' : ''}>5</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update medication details
+        function updateMedication(index, field, value) {
+            selectedMedications[index][field] = value;
+            checkDrugInteractions();
+        }
+
+        // Remove medication
+        function removeMedication(index) {
+            selectedMedications.splice(index, 1);
+            updateSelectedMedications();
+            checkDrugInteractions();
+        }
+
+        // Check drug interactions
+        function checkDrugInteractions() {
+            const warningsContainer = document.getElementById('interactionWarnings');
+            const detailsContainer = document.getElementById('interactionDetails');
+            
+            // Simulate drug interaction checking
+            if (selectedMedications.length >= 2) {
+                const hasInteraction = selectedMedications.some(med1 => 
+                    selectedMedications.some(med2 => 
+                        med1 !== med2 && 
+                        ((med1.name === 'Lisinopril' && med2.name === 'Metoprolol') ||
+                         (med1.name === 'Atorvastatin' && med2.name === 'Metformin'))
+                    )
+                );
+
+                if (hasInteraction) {
+                    detailsContainer.innerHTML = `
+                        <p class="mb-2">Potential interactions detected:</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Lisinopril + Metoprolol: Monitor for hypotension</li>
+                            <li>Multiple cardiovascular medications: Enhanced hypotensive effect</li>
+                        </ul>
+                        <p class="mt-2 text-xs">Recommendation: Monitor blood pressure closely, consider dose adjustment</p>
+                    `;
+                    warningsContainer.classList.remove('hidden');
+                } else {
+                    warningsContainer.classList.add('hidden');
+                }
+            } else {
+                warningsContainer.classList.add('hidden');
+            }
+        }
+
+        // Add digital signature
+        function addSignature() {
+            const signaturePad = document.getElementById('signaturePad');
+            signaturePad.innerHTML = `
+                <div class="text-center">
+                    <div class="text-2xl text-green-600 mb-2">✓</div>
+                    <div class="text-sm text-green-700 font-medium">Dr. Mukta Tabassum</div>
+                    <div class="text-xs text-gray-500">Digitally signed on ${new Date().toLocaleString()}</div>
+                </div>
+            `;
+            signaturePad.classList.add('signed');
+            signaturePad.onclick = null;
+        }
+
+        // Form actions
+        function saveDraft() {
+            if (!selectedPatient) {
+                showNotification('Please select a patient first', 'error');
+                return;
+            }
+            if (selectedMedications.length === 0) {
+                showNotification('Please add at least one medication', 'error');
+                return;
+            }
+            showNotification('Prescription draft saved successfully', 'success');
+        }
+
+        function sendPrescription() {
+            if (!selectedPatient) {
+                showNotification('Please select a patient first', 'error');
+                return;
+            }
+            if (selectedMedications.length === 0) {
+                showNotification('Please add at least one medication', 'error');
+                return;
+            }
+            if (!document.getElementById('signaturePad').classList.contains('signed')) {
+                showNotification('Please add your digital signature', 'error');
+                return;
+            }
+            showNotification('Prescription sent to pharmacy successfully', 'success');
+        }
+
+        function printPrescriptionForm() {
+            if (!selectedPatient || selectedMedications.length === 0) {
+                showNotification('Please complete the prescription form first', 'error');
+                return;
+            }
+            showNotification('Prescription printed successfully', 'success');
+        }
+
+        function clearForm() {
+            selectedPatient = null;
+            selectedMedications = [];
+            document.getElementById('patientSearch').value = '';
+            document.getElementById('medicationSearch').value = '';
+            document.getElementById('selectedPatient').innerHTML = 'No patient selected';
+            document.getElementById('selectedMedications').innerHTML = '';
+            document.getElementById('interactionWarnings').classList.add('hidden');
+            document.getElementById('signaturePad').innerHTML = '<span class="text-gray-500">Click to add digital signature</span>';
+            document.getElementById('signaturePad').classList.remove('signed');
+            document.getElementById('signaturePad').onclick = addSignature;
+            showNotification('Form cleared', 'info');
+        }
+
+        // Prescription actions
+        function approvePrescription(patientId) {
+            showNotification(`Prescription approved for ${patientId}`, 'success');
+            // Update UI to show approved status
+        }
+
+        function editPrescription(patientId) {
+            showNotification(`Opening prescription editor for ${patientId}`, 'info');
+        }
+
+        function viewPrescriptionDetails(patientId) {
+            showNotification(`Viewing prescription details for ${patientId}`, 'info');
+        }
+
+        function cancelPrescription(patientId) {
+            if (confirm('Are you sure you want to cancel this prescription?')) {
+                showNotification(`Prescription cancelled for ${patientId}`, 'success');
+            }
+        }
+
+        function printPrescription(patientId) {
+            showNotification(`Printing prescription for ${patientId}`, 'success');
+        }
+
+        function sendToPharmacy(patientId) {
+            showNotification(`Prescription sent to pharmacy for ${patientId}`, 'success');
+        }
+
+        function approveRefill(patientId) {
+            showNotification(`Refill approved for ${patientId}`, 'success');
+        }
+
+        function scheduleAppointment(patientId) {
+            showNotification(`Scheduling appointment for ${patientId}`, 'info');
+        }
+
+        function requestLabWork(patientId) {
+            showNotification(`Lab work requested for ${patientId}`, 'info');
+        }
+
+        function denyRefill(patientId) {
+            if (confirm('Are you sure you want to deny this refill request?')) {
+                showNotification(`Refill denied for ${patientId}`, 'success');
+            }
+        }
+
+        // Filter prescriptions
+        function filterPrescriptions() {
+            // Implementation for filtering prescriptions
+            showNotification('Filtering prescriptions...', 'info');
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+            
+            notification.className = `notification ${colors[type]} text-white p-4 rounded-lg shadow-lg`;
+            notification.innerHTML = `
+                <div class="flex items-start justify-between">
+                    <div class="flex items-start">
+                        <span class="text-lg mr-2">${type === 'error' ? '🚨' : type === 'warning' ? '⚠️' : type === 'success' ? '✅' : 'ℹ️'}</span>
+                        <p class="text-sm">${message}</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-white hover:text-gray-200 ml-4">&times;</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('#patientSearch') && !event.target.closest('#patientSearchResults')) {
+                document.getElementById('patientSearchResults').classList.add('hidden');
+            }
+            if (!event.target.closest('#medicationSearch') && !event.target.closest('#medicationSearchResults')) {
+                document.getElementById('medicationSearchResults').classList.add('hidden');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a604d1a28d814e',t:'MTc1NDM5NDAxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
